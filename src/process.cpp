@@ -13,8 +13,8 @@ using std::vector;
 
 Process::Process(int pid) {
     pid_ = pid;
-    cpu_utilization_ = 0; 
-    cpu_utilization_ = float(LinuxParser::ActiveJiffies(pid)) / float(LinuxParser::Jiffies());
+    // cpu_utilization_ = 0; 
+    cpu_utilization_ = float(LinuxParser::ActiveJiffies(pid));
     command_ = Command();
     ram_ = LinuxParser::Ram(pid);
     uptime_ = LinuxParser::UpTime(pid);
@@ -46,5 +46,5 @@ long int Process::UpTime() { return uptime_; }
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const {
-    return (CpuUtilization() < a.CpuUtilization());
-    }
+    return CpuUtilization() < a.CpuUtilization();
+}
