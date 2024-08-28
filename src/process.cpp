@@ -13,12 +13,21 @@ using std::vector;
 
 Process::Process(int pid) {
     pid_ = pid;
-    // cpu_utilization_ = 0; 
-    cpu_utilization_ = float(LinuxParser::ActiveJiffies(pid));
+    CpuUtilization(pid);
     command_ = Command();
     ram_ = LinuxParser::Ram(pid);
     uptime_ = LinuxParser::UpTime(pid);
     user_ = LinuxParser::User(pid);
+}
+
+// Set CpuUtilization
+void Process::CpuUtilization(int pid) {
+
+    float seconds = float(LinuxParser::UpTime(pid));
+    float total_time = float(LinuxParser::ActiveJiffies(pid));
+
+    cpu_utilization_ =  ((total_time / sysconf(_SC_CLK_TCK)) / seconds);
+
 }
 
 // Return this process's ID
@@ -43,8 +52,7 @@ string Process::User() { return user_; }
 // TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { return uptime_; }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
+// Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
     return CpuUtilization() < a.CpuUtilization();
 }

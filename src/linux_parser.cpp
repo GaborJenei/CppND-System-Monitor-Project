@@ -92,11 +92,9 @@ float LinuxParser::MemoryUtilization() {
   }
 
   return (memTotal - MemFree) / memTotal;
-  // return 0.0;
-
   }
 
-// TODO: Read and return the system uptime
+// Read and return the system uptime
 long LinuxParser::UpTime() {
   long uptime;
 
@@ -105,7 +103,9 @@ long LinuxParser::UpTime() {
   if (filestream.is_open()) {
     std::getline(filestream, line);
     std::istringstream linestream(line);
+
     linestream >> uptime;
+
     uptime = static_cast<long>(uptime);
   }
 
@@ -124,13 +124,10 @@ long LinuxParser::Jiffies() {
 // Read and return the number of active jiffies for a PID
 long LinuxParser::ActiveJiffies(int pid) {
 
-  // long system_uptime = LinuxParser::UpTime();
-
   long utime = 0;
   long stime = 0;
   long cutime = 0;
   long cstime = 0;
-  // long start_time = 0;
   
   string line;
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
@@ -148,15 +145,11 @@ long LinuxParser::ActiveJiffies(int pid) {
     stime = std::stol(pid_stats[14]);
     cutime = std::stol(pid_stats[15]);
     cstime = std::stol(pid_stats[16]);
-    // start_time = std::stol(pid_stats[21]);
   }
 
   long total_time = utime + stime + cutime + cstime;
 
-  // float seconds = system_uptime - (float(start_time) / float(sysconf(_SC_CLK_TCK)));
-  // float cpu_usage = 100.0 * ((float(total_time) / float(sysconf(_SC_CLK_TCK))) / seconds);
-
-  return total_time; // cpu_usage;
+  return total_time;
 }
 
 // Read and return the number of active jiffies for the system
@@ -350,10 +343,10 @@ string LinuxParser::User(int pid) {
   return key;
   }
 
-// TODO: Read and return the uptime of a process
+// Read and return the uptime of a process
 long LinuxParser::UpTime(int pid) {
   
-  long uptime = 0;
+  long start_time = 0;
 
   string line;
   string key;
@@ -369,8 +362,8 @@ long LinuxParser::UpTime(int pid) {
       pid_stats.push_back(stat);
     }
 
-    uptime = std::stol(pid_stats[21]);
+    start_time = std::stol(pid_stats[21]);
   }
   
-  return LinuxParser::UpTime() - uptime / sysconf(_SC_CLK_TCK);
+  return LinuxParser::UpTime() - (start_time / sysconf(_SC_CLK_TCK));
 }
