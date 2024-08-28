@@ -1,9 +1,9 @@
 #include "processor.h"
+
 #include <linux_parser.h>
 
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
-
   Update();
 
   float deltaTotal = float(curTotal) - float(prevTotal);
@@ -11,10 +11,9 @@ float Processor::Utilization() {
 
   float utilization = (deltaTotal - deltaIdle) / deltaTotal;
   return utilization;
-  }
+}
 
 void Processor::Update() {
-  
   prevIdle = curIdle;
   prevActive = curActive;
   prevTotal = curTotal;

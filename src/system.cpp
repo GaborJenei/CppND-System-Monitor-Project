@@ -1,13 +1,15 @@
+#include "system.h"
+
 #include <unistd.h>
+
 #include <cstddef>
 #include <set>
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"  // Include the header file for LinuxParser
 #include "process.h"
 #include "processor.h"
-#include "system.h"
-#include "linux_parser.h" // Include the header file for LinuxParser
 
 using std::set;
 using std::size_t;
@@ -18,18 +20,18 @@ using std::vector;
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { 
-    vector<int> pids = LinuxParser::Pids();
-    
-    processes_.clear();
+vector<Process>& System::Processes() {
+  vector<int> pids = LinuxParser::Pids();
 
-    for (int pid : pids) {
-        processes_.push_back(Process(pid));
-    }
+  processes_.clear();
 
-    std::sort(processes_.rbegin(), processes_.rend());
-    
-    return processes_;
+  for (int pid : pids) {
+    processes_.push_back(Process(pid));
+  }
+
+  std::sort(processes_.rbegin(), processes_.rend());
+
+  return processes_;
 }
 
 // Return the system's kernel identifier (string)
