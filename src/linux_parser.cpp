@@ -319,8 +319,11 @@ string LinuxParser::Uid(int pid) {
 
 // Read and return the user associated with a process
 string LinuxParser::User(int pid) {
+  
   string line;
   string key;
+
+  string uid = LinuxParser::Uid(pid);
 
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
@@ -333,7 +336,7 @@ string LinuxParser::User(int pid) {
       while (linestream >> info) {
         user_info.push_back(info);
 
-        if (info == to_string(pid)) {
+        if (info == uid) {
           key = user_info[0];
           break;
         }
